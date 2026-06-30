@@ -10,27 +10,25 @@ The dependency on the `ControlRig` engine plugin (a `.Build.cs` module dep + a `
 entry) **is the gating**: this extension won't compile or load unless Control Rig is present in the
 host project.
 
-> **Scaffold state:** this repo is a freshly-initialized skeleton — the gating + CI are wired but the
-> Control Rig tools are **not implemented yet**. The provider currently registers only the sample
-> `hello-extension` tool; the implementation step replaces it with the `control-rig-*` tools below.
-
-## The tools (planned)
+## The tools
 
 The provider (`FUnrealAIControlRigProvider` in
-`UnrealAIControlRig/Source/UnrealAIControlRig/Private/UnrealAIControlRigModule.cpp`) will register
-Control Rig tools via the fluent `Registry.Tool(...).Handle(...)` builder:
+`UnrealAIControlRig/Source/UnrealAIControlRig/Private/UnrealAIControlRigModule.cpp`) registers a
+**read-only** Control Rig inspection family via the fluent `Registry.Tool(...).Handle(...)` builder:
 
-- `control-rig-list` — list Control Rig blueprint assets (Asset Registry), read-only.
-- `control-rig-get` — inspect a single Control Rig asset's rig element hierarchy, read-only.
-- `control-rig-create` — create a new Control Rig blueprint asset at a content path.
-- `control-rig-add-component` — add a `UControlRigComponent` to an actor in the editor world.
-- `control-rig-get-component` — inspect an actor's Control Rig component (its bound rig), read-only.
+- `control-rig-list` — list Control Rig blueprint assets (Asset Registry, no asset loaded), read-only.
+- `control-rig-get` — inspect a single Control Rig asset's rig element hierarchy (per-type counts +
+  every element's name & type), read-only.
+- `control-rig-list-controls` — list a Control Rig's control elements + each control's type, read-only.
+- `control-rig-list-bones` — list a Control Rig's bone elements + each bone's immediate parent, read-only.
+- `control-rig-get-component` — inspect an actor's `UControlRigComponent` (its bound rig class), read-only.
 
-The exact set is settled during implementation; `extension.json` `tools[]` + the README table are the
-source of truth, and each tool ships one UE Automation spec + one E2E check. Handlers run on the
-**game thread** and call ControlRig / editor APIs directly; mutating tools validate engine state
-defensively (UE has no C++ exceptions — a crash in a handler is an editor crash) and return
-`FUnrealMcpToolResult::Error(...)`, never an unchecked deref.
+`extension.json` `tools[]` + the README table are the source of truth, and each tool ships one UE
+Automation spec + one E2E check. Handlers run on the **game thread** and call ControlRig / editor APIs
+directly; each validates its inputs + engine state defensively (UE has no C++ exceptions — a crash in a
+handler is an editor crash) and returns `FUnrealMcpToolResult::Error(...)`, never an unchecked deref.
+The first cut is inspection-only — it reads Control Rig assets/components but does not author or mutate
+them (asset creation is an editor-module-heavy, headless-brittle operation deliberately left out).
 
 ## The contract (read before editing tools)
 
