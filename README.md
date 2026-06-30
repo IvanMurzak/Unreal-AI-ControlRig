@@ -3,8 +3,9 @@
 <p align="center">
   An <b>animation rigging (Control Rig)</b> tool extension for
   <a href="https://github.com/IvanMurzak/Unreal-MCP">AI Game Developer (Unreal-MCP)</a>.
-  Lets an AI agent list and inspect Control Rig assets, create new rigs, and add Control Rig
-  components to actors — all from inside the Unreal Editor.
+  Lets an AI agent list and inspect Control Rig assets — their rig-element hierarchy (bones,
+  controls, nulls, curves) — and inspect an actor's Control Rig component, all from inside the
+  Unreal Editor.
 </p>
 
 ---
@@ -19,29 +20,24 @@ workflows against the live editor. Enabling / disabling the extension live-updat
 > dependency on the engine's `ControlRig` plugin — that dependency **is the gating**: the extension
 > won't compile or load unless Control Rig is present in the host project.
 
-## Status
+## Tools
 
-This repository is a freshly-scaffolded **skeleton**: the gating against the `ControlRig` plugin is
-wired and the CI is live, but the Control Rig tools are **not implemented yet** — the provider
-currently registers only the sample `hello-extension` tool the template ships, which the
-implementation step replaces with the tools below.
-
-## Tools (planned)
-
-This extension will contribute the following Control Rig tools (ids are kebab-case, prefixed
-`control-rig-`; handlers run on the game thread and call ControlRig / editor APIs directly). Mutating
-tools validate engine state defensively and return a structured error rather than crashing the editor.
+This extension contributes the following **read-only** Control Rig inspection tools (ids are
+kebab-case, prefixed `control-rig-`; handlers run on the game thread and call ControlRig / editor
+APIs directly). Every handler validates its inputs and the engine state it touches and returns a
+structured error rather than crashing the editor.
 
 | Tool | Kind | What it does |
 | --- | --- | --- |
 | `control-rig-list` | read-only | List the Control Rig blueprint assets in the project (Asset Registry; no asset loaded). |
-| `control-rig-get` | read-only | Inspect a single Control Rig asset: rig element hierarchy (bones / controls / nulls). |
-| `control-rig-create` | mutating | Create a new Control Rig blueprint asset at a content path. |
-| `control-rig-add-component` | mutating | Add a `UControlRigComponent` to a named actor in the editor world. |
-| `control-rig-get-component` | read-only | Inspect an actor's Control Rig component: its bound rig class. |
+| `control-rig-get` | read-only | Inspect a single Control Rig asset's rig element hierarchy: per-type counts + every element's name & type (bones / controls / nulls / curves). |
+| `control-rig-list-controls` | read-only | List a Control Rig's control elements, each with its control type (Float / Transform / Bool / …). |
+| `control-rig-list-bones` | read-only | List a Control Rig's bone elements, each with its immediate parent bone. |
+| `control-rig-get-component` | read-only | Inspect an actor's `UControlRigComponent` in the editor world: its bound Control Rig class. |
 
-> The exact tool set is finalized during implementation; each tool ships with one UE Automation spec
-> and one E2E `unreal-mcp-cli` check. `extension.json` `tools[]` and this table are the source of truth.
+> Each tool ships with one UE Automation spec and one E2E `unreal-mcp-cli` check. `extension.json`
+> `tools[]` and this table are the source of truth. The first cut is inspection-only: it reads
+> Control Rig assets and components but does not author or mutate them.
 
 ## Install
 
@@ -69,7 +65,7 @@ Extensions panel.
 UnrealAIControlRig/                                  the UE plugin
 ├── UnrealAIControlRig.uplugin                        descriptor; Type=Editor; Plugins: [ UnrealMCP, ControlRig ]
 └── Source/UnrealAIControlRig/
-    ├── UnrealAIControlRig.Build.cs                   deps: UnrealMcpRuntime + UnrealMcpEditor + ControlRig(+Editor)
+    ├── UnrealAIControlRig.Build.cs                   deps: UnrealMcpRuntime + UnrealMcpEditor + ControlRig + ControlRigDeveloper
     └── Private/
         ├── UnrealAIControlRigModule.cpp              the IUnrealMcpToolProvider + module; registers the tools
         └── Tests/UnrealAIControlRigSpec.cpp          UE Automation specs (one It(...) per tool)
