@@ -4,7 +4,7 @@
   "description": "An AI Game Developer (Unreal-MCP) extension contributing MCP tools an AI agent can call against the Unreal Editor.",
   "pluginName": "UnrealAIControlRig",
   "repo": "IvanMurzak/Unreal-AI-ControlRig",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "minCoreVersion": "0.1.0",
   "enginePlugins": ["ControlRig"],
   "tools": [
