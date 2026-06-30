@@ -330,7 +330,8 @@ public:
 		Registry.Tool(TEXT("control-rig-get-component"))
 			.Title(TEXT("Get Control Rig Component"))
 			.Description(TEXT("Inspects the Control Rig component of an actor in the active editor world (read-only). "
-			                  "Looks the actor up by its label. Returns { actorName, componentName, controlRigClass } "
+			                  "Looks the actor up by its label. Returns { actorName, componentName, controlRigClass, hasControlRig } "
+			                  "(controlRigClass is the bound rig instance's class, or \"None\" when no rig is bound) "
 			                  "or a defensive error if the actor or component is not found."))
 			.ParamString(TEXT("actorName"), TEXT("Label of the actor to inspect, as shown in the World Outliner."),
 				EUnrealMcpParamRequirement::Required)
@@ -377,16 +378,30 @@ public:
 						FString::Printf(TEXT("Actor '%s' has no Control Rig component."), *ActorName));
 				}
 
+				// Obtain the bound rig CLASS via the documented public accessor GetControlRig() rather
+				// than the raw UPROPERTY UControlRigComponent::ControlRigClass: that member's accessibility
+				// is not stable across UE versions (it is not reliably public in 5.8+), and referencing it
+				// directly breaks the fresh compile on those engines. GetControlRig() is a stable, public
+				// BlueprintPure API present across UE 5.7/5.8 and returns the live UControlRig instance whose
+				// UClass is the bound rig class. Degrade gracefully: when no rig is bound/instantiated (e.g.
+				// the component has no class set, or the rig has not been instanced at pure editor time),
+				// report "None" rather than dereferencing a non-existent member or a null pointer.
+				UControlRig* ControlRig = Component->GetControlRig();
+				const bool bHasRig = (ControlRig != nullptr);
 				const FString ControlRigClassName =
-					Component->ControlRigClass ? Component->ControlRigClass->GetName() : FString(TEXT("None"));
+					bHasRig ? ControlRig->GetClass()->GetName() : FString(TEXT("None"));
 
 				TSharedPtr<FJsonObject> Structured = MakeShared<FJsonObject>();
 				Structured->SetStringField(TEXT("actorName"), ActorName);
 				Structured->SetStringField(TEXT("componentName"), Component->GetName());
 				Structured->SetStringField(TEXT("controlRigClass"), ControlRigClassName);
+				Structured->SetBoolField(TEXT("hasControlRig"), bHasRig);
 				return FUnrealMcpToolResult::Success(
-					FString::Printf(TEXT("Actor '%s' has Control Rig component '%s' (rig class: %s)."),
-						*ActorName, *Component->GetName(), *ControlRigClassName),
+					bHasRig
+						? FString::Printf(TEXT("Actor '%s' has Control Rig component '%s' (rig class: %s)."),
+							*ActorName, *Component->GetName(), *ControlRigClassName)
+						: FString::Printf(TEXT("Actor '%s' has Control Rig component '%s' with no Control Rig bound."),
+							*ActorName, *Component->GetName()),
 					Structured);
 			});
 	}
