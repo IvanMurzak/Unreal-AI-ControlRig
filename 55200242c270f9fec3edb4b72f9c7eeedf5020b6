@@ -1,0 +1,19 @@
+UnrealAIControlRig/Source/UnrealAIControlRig/UnrealAIControlRig.Build.cs
+  s_52bfd8633bca95::t_9907398026625c 36-42,44-50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.5",
+  "base_commit_sha": "55200242c270f9fec3edb4b72f9c7eeedf5020b6",
+  "prompts": {},
+  "sessions": {
+    "s_52bfd8633bca95": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2d9bda5b-4e10-4c2c-a34a-3932ba4a1c0e",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Ivan Murzak <Ivan.D.Murzak@gmail.com>"
+    }
+  }
+}

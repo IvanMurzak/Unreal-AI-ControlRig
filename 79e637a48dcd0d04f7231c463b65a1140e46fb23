@@ -1,0 +1,35 @@
+CLAUDE.md
+  s_e3cea916442b5e::t_b79886188a6478 1,3-7,9-11,13-35,43,55-58,62-64,66-68,70,72-73,78-79
+README.md
+  s_e3cea916442b5e::t_47add9ef22e939 1,4,6-7,12-16,18-20,22,24-27,29,31-33,35-41,43-44,46,48-49,52-53,55-57,59-64,66,68-80,82,84,87-88,90,94,97,100-103,105,115-118,120,124-126,129-130
+Tests/e2e/tools/hello-extension.e2e.ps1
+  s_e3cea916442b5e::t_ca9256d4dfeb40 5
+UnrealAIControlRig/Source/UnrealAIControlRig/Private/Tests/UnrealAIControlRigSpec.cpp
+  s_e3cea916442b5e::t_a28276bc3c51b4 1,18,24,30,37,46,48,50,56,61,66,70,81,86
+UnrealAIControlRig/Source/UnrealAIControlRig/Private/UnrealAIControlRigModule.cpp
+  s_e3cea916442b5e::t_b47ea27c5a070b 1,10,20,23-24,37,39-40,49,65,70,72,81,86,89
+UnrealAIControlRig/Source/UnrealAIControlRig/UnrealAIControlRig.Build.cs
+  s_e3cea916442b5e::t_a04d6cbf8c8c6b 1,6,8,41-42
+UnrealAIControlRig/UnrealAIControlRig.uplugin
+  s_e3cea916442b5e::t_ed8ae0a1e480c7 5,8-10,12,19,28-31
+docs/claude/architecture.md
+  s_e3cea916442b5e::t_c76b73aa997f32 31-34,44
+extension.json
+  s_e3cea916442b5e::t_6df3de0867248a 2-3,5-6,9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.4",
+  "base_commit_sha": "79e637a48dcd0d04f7231c463b65a1140e46fb23",
+  "prompts": {},
+  "sessions": {
+    "s_e3cea916442b5e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c575ab56-73e6-4952-bb8b-fef415924e27",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Ivan Murzak <Ivan.D.Murzak@gmail.com>"
+    }
+  }
+}

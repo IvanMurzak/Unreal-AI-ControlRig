@@ -1,0 +1,19 @@
+UnrealAIControlRig/Source/UnrealAIControlRig/Private/UnrealAIControlRigModule.cpp
+  s_80048c3742a8ad::t_f6ba1dc20eab20 333-334,381-390,392,398,400-404
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.5",
+  "base_commit_sha": "ac4e162577a90a25372c3968c97ca5c76fc02080",
+  "prompts": {},
+  "sessions": {
+    "s_80048c3742a8ad": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "agent-a3700b0930866c52e",
+        "model": "unknown"
+      },
+      "human_author": "Ivan Murzak <Ivan.D.Murzak@gmail.com>"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+CLAUDE.md
+  s_e3cea916442b5e::t_1c1dc7a0a86c3b 13,16-31
+Tests/e2e/tools/control-rig-list-controls.e2e.ps1
+  s_e3cea916442b5e::t_a432ef47bea1f1 1-17
+Tests/e2e/tools/control-rig-get-component.e2e.ps1
+  s_e3cea916442b5e::t_a4415a762762a5 1-18
+README.md
+  s_e3cea916442b5e::t_b25333bbd91b34 6-8
+  s_e3cea916442b5e::t_504d70dec827d5 23,25-28,33-36,38-40
+  s_e3cea916442b5e::t_a9654ec09e8422 68
+Tests/e2e/tools/control-rig-list.e2e.ps1
+  s_e3cea916442b5e::t_9e598b206cfa1a 1-17
+Tests/e2e/tools/control-rig-get.e2e.ps1
+  s_e3cea916442b5e::t_20c47f6da1e3ee 1-19
+Tests/e2e/tools/control-rig-list-bones.e2e.ps1
+  s_e3cea916442b5e::t_49f5702d901281 1-17
+extension.json
+  s_8cd282d6c53d00::t_c4c00717abdfec 10-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.5",
+  "base_commit_sha": "2d77a4bdf1d25b4096ba6f06652bdd2c0474be74",
+  "prompts": {},
+  "sessions": {
+    "s_8cd282d6c53d00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "agent-ac2a4d05c6a449d7c",
+        "model": "unknown"
+      },
+      "human_author": "Ivan Murzak <Ivan.D.Murzak@gmail.com>"
+    },
+    "s_e3cea916442b5e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c575ab56-73e6-4952-bb8b-fef415924e27",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Ivan Murzak <Ivan.D.Murzak@gmail.com>"
+    }
+  }
+}
