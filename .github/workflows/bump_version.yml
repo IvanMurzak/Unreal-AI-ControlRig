@@ -132,8 +132,7 @@ jobs:
           VERSION: ${{ github.event.inputs.version }}
         run: ./commands/bump-version.ps1 -NewVersion "$env:VERSION"
 
-      - name: Commit the bump
-        id: commit
+      - name: Stage the version edit
         env:
           VERSION: ${{ github.event.inputs.version }}
         run: |
@@ -150,8 +149,43 @@ jobs:
             echo "Error: bump-version.ps1 changed nothing — is the version already $VERSION?"
             exit 1
           fi
-          echo "Staged files:"
-          git diff --cached --name-only
+
+      # The guard above only catches a TOTAL miss. bump-version.ps1 walks its three targets
+      # independently and exits 0 even when only one or two of them matched, so a PARTIAL regex miss
+      # would stage a version-INCONSISTENT tree (say .uplugin bumped but extension.json not), sail
+      # past that guard, and get pushed and released. Assert the exact expected set before anything
+      # is committed — this step failing means nothing is committed, pushed, or dispatched.
+      - name: Verify the staged file set
+        run: |
+          set -euo pipefail
+          staged=$(git diff --cached --name-only)
+          total=$(printf '%s\n' "$staged" | grep -c . || true)
+          uplugin=$(printf '%s\n' "$staged" | grep -c '\.uplugin$' || true)
+          module=$(printf '%s\n' "$staged" | grep -c 'Module\.cpp$' || true)
+          manifest=$(printf '%s\n' "$staged" | grep -cx 'extension\.json' || true)
+          if [ "$total" -ne 3 ] || [ "$uplugin" -ne 1 ] || [ "$module" -ne 1 ] || [ "$manifest" -ne 1 ]; then
+            echo "Error: expected exactly the 3 version files to be staged."
+            echo "  total staged   : $total (want 3)"
+            echo "  *.uplugin      : $uplugin (want 1)"
+            echo "  *Module.cpp    : $module (want 1)"
+            echo "  extension.json : $manifest (want 1)"
+            echo ""
+            echo "Actually staged:"
+            printf '%s\n' "$staged"
+            echo ""
+            echo "A shortfall means bump-version.ps1 did not rewrite one of its targets — it prints"
+            echo "'no match (pattern not found)' and still exits 0. Nothing has been pushed."
+            exit 1
+          fi
+          echo "Staged file set verified (3/3):"
+          printf '%s\n' "$staged"
+
+      - name: Commit the bump
+        id: commit
+        env:
+          VERSION: ${{ github.event.inputs.version }}
+        run: |
+          set -euo pipefail
           # Recorded so the dispatching side can assert the changed-file set is exactly the version files.
           {
             echo "files<<EOF"
